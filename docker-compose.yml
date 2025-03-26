@@ -52,7 +52,18 @@ services:
       NODE_ENV: development
     command: sh -c "npm install && npm run dev -- --host"
 
-
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: adminpassword
+    ports:
+      - "5050:80"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   portainer:
     image: portainer/portainer-ce:latest
