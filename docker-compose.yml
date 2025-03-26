@@ -47,7 +47,6 @@ services:
       NODE_ENV: development
     command: sh -c "npm install && npm run dev -- --host"
 
-<<<<<<< HEAD
   pgadmin:
     image: dpage/pgadmin4
     restart: always
@@ -60,7 +59,7 @@ services:
       - "5050:80"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-=======
+      
   nginx:
     image: nginx:latest
     container_name: vue-nginx
@@ -71,7 +70,6 @@ services:
     networks:
       - nginx-network
     restart: always
->>>>>>> refs/remotes/origin/main
 
   portainer:
     image: portainer/portainer-ce:latest
