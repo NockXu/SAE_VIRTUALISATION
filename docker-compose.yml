@@ -33,12 +33,7 @@ services:
       db:
         condition: service_healthy
     command: sh -c "npm install && npm run dev"
-    healthcheck:
-      test: ["CMD", "pg_isready", "-h", "db", "-U", "myuser"]
-      interval: 10s
-      retries: 5
-      start_period: 5s
-
+  
   vue-app:
     image: node:18-alpine
     container_name: vue-frontend
@@ -52,6 +47,7 @@ services:
       NODE_ENV: development
     command: sh -c "npm install && npm run dev -- --host"
 
+<<<<<<< HEAD
   pgadmin:
     image: dpage/pgadmin4
     restart: always
@@ -64,12 +60,24 @@ services:
       - "5050:80"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+=======
+  nginx:
+    image: nginx:latest
+    container_name: vue-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./VueJs/dist:/usr/share/nginx/html:ro
+    networks:
+      - nginx-network
+    restart: always
+>>>>>>> refs/remotes/origin/main
 
   portainer:
     image: portainer/portainer-ce:latest
     container_name: container-portainer
     ports:
-      - "9001:9000"
+      - "9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
@@ -78,3 +86,7 @@ services:
 volumes:
   portainer_data:
   postgres_data:
+
+networks:
+  nginx-network:
+    driver: bridge
