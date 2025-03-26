@@ -41,7 +41,22 @@ services:
     ports:
       - "5173:5173"
     volumes:
-      - ./VueJs/dist:/app
+      - ./VueJs:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+    command: sh -c "npm install && npm run dev -- --host"
+
+  nginx:
+    image: nginx:latest
+    container_name: vue-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./VueJs/dist:/usr/share/nginx/html:ro
+    networks:
+      - nginx-network
+    restart: always
 
   portainer:
     image: portainer/portainer-ce:latest
@@ -56,3 +71,7 @@ services:
 volumes:
   portainer_data:
   postgres_data:
+
+networks:
+  nginx-network:
+    driver: bridge
