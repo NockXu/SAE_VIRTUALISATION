@@ -8,6 +8,7 @@ Ce projet vise à mettre en place trois conteneurs sur un serveur Proxmox. De pl
 
 DAVID Gabriel : NockXu
 ALLUIN Edouard : Talion
+CIOLKOWSKI Yann : yciolk
 
 ## Container mit en place
 
