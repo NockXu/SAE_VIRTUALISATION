@@ -1,0 +1,69 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: db-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "localhost", "-U", "myuser"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
+
+  node-app:
+    image: node:18-alpine
+    container_name: container-node
+    working_dir: /app
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./NodeJs:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "npm install && npm run dev"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "db", "-U", "myuser"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+
+  vue-app:
+    image: node:18-alpine
+    container_name: vue-frontend
+    working_dir: /app
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./VueJs:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+    command: sh -c "npm install && npm run dev -- --host"
+
+
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: container-portainer
+    ports:
+      - "9001:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    restart: always
+
+volumes:
+  portainer_data:
+  postgres_data:
